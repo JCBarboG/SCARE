@@ -1,0 +1,30 @@
+{
+  "name": "SCARE — Sistema de búsqueda de Autores y Revisores Expertos",
+  "short_name": "SCARE",
+  "description": "Automatiza la búsqueda de revisores académicos expertos para tus artículos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2ede1",
+  "theme_color": "#14395f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Dependencia Python usada por api/lib/scholarly_search.py
+scholarly>=1.7.11

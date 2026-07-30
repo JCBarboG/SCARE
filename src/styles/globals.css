@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f2ede1;
+}
+
+h1, h2, h3 {
+  font-family: 'Lora', serif;
+}
+
+.font-data {
+  font-family: 'IBM Plex Mono', monospace;
+}

@@ -50,18 +50,27 @@ documento de producto original.
 ## Despliegue
 
 **Importante:** el backend depende de `scholarly` (Python) invocado como
-subproceso desde Node (`api/lib/scholarly.js`). Las funciones serverless de
-Vercel **no** tienen Python disponible ni permiten spawnear procesos
-arbitrarios, así que `api/search-reviewers.js` **no funcionará si se
-despliega tal cual en Vercel**. Por eso el frontend y el backend se
-despliegan por separado:
+subproceso desde Node (`api/lib/scholarly.js`). Ninguna plataforma de
+funciones serverless (Vercel, Netlify Functions, GitHub Pages, etc.) soporta
+eso: no tienen Python disponible ni permiten spawnear procesos arbitrarios.
+Por eso el frontend (estático, en GitHub Pages) y el backend (proceso Docker
+persistente, en Railway/Render/Fly) se despliegan por separado.
 
-### Frontend (estático) → Vercel, Netlify o GitHub Pages
-- Build command: `npm run build` · Output: `dist/`
-- Ya incluye `vercel.json` con el rewrite de SPA.
-- Configura la variable `VITE_API_URL` apuntando a la URL pública del
-  backend (ver siguiente sección), por ejemplo:
-  `VITE_API_URL=https://scare-api.up.railway.app/api`
+### Frontend → GitHub Pages
+Repositorio: https://github.com/JCBarboG/SCARE
+
+1. En GitHub: **Settings → Pages → Source: "GitHub Actions"**.
+2. En **Settings → Secrets and variables → Actions → Variables**, crea la
+   variable `VITE_API_URL` con la URL pública del backend (ver siguiente
+   sección), por ejemplo: `https://scare-api.up.railway.app/api`.
+3. El workflow `.github/workflows/deploy-pages.yml` compila con Vite y
+   publica `dist/` en GitHub Pages automáticamente en cada push a `main`
+   (o manualmente desde la pestaña Actions → "Deploy frontend to GitHub
+   Pages" → Run workflow).
+4. El sitio queda publicado en `https://JCBarboG.github.io/SCARE/`.
+5. `vite.config.js` ya tiene `base: '/SCARE/'` configurado para que las
+   rutas de assets funcionen bajo ese subpath (necesario porque GitHub
+   Pages no sirve el proyecto desde la raíz del dominio).
 
 ### Backend (Express + scholarly) → Railway, Render o Fly.io con Docker
 El repo incluye un `Dockerfile` que instala Node 18 + Python3 + `scholarly`
@@ -71,34 +80,29 @@ Dockerfile" funciona sin configuración extra:
 1. Conecta el repo de GitHub en Railway/Render/Fly y selecciona "Docker" como
    método de build (detectan el `Dockerfile` automáticamente).
 2. Variables de entorno a configurar en el host (ver `.env.example`):
-   - `FRONTEND_URL` → dominio del frontend desplegado (para CORS)
+   - `FRONTEND_URL` → `https://JCBarboG.github.io` (para CORS; sin el
+     `/SCARE/` final)
    - `SCHOLARLY_MAX_SEARCHES`, `SCHOLARLY_DELAY_MS`
    - `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`
 3. El contenedor expone el puerto `3001` (`PORT` es configurable).
 4. Usa un plan con timeout de request largo (mín. 30-60s): la búsqueda con
    varios autores + delays de `scholarly` puede tardar ese tiempo.
+5. Una vez desplegado, copia la URL pública del backend y pégala como
+   variable `VITE_API_URL` en GitHub (paso 2 de la sección anterior), luego
+   vuelve a correr el workflow de Pages para que el frontend la tome.
 
 ### CI
-`.github/workflows/ci.yml` corre `npm install && npm run build` en cada
-push/PR a `main` para detectar errores de build antes de mergear.
+- `.github/workflows/ci.yml` corre `npm install && npm run build` en cada
+  push/PR a `main` para detectar errores de build antes de mergear.
+- `.github/workflows/deploy-pages.yml` construye y publica el frontend en
+  GitHub Pages en cada push a `main`.
 
-### Subir a GitHub
-Repositorio: https://github.com/JCBarboG/SCARE
-
+### Subir cambios a GitHub
 ```bash
-git init
 git add .
-git commit -m "[SCARE] scaffold inicial del proyecto"
-git branch -M main
-git remote add origin https://github.com/JCBarboG/SCARE.git
-git push -u origin main
+git commit -m "[SCARE] descripción del cambio"
+git push
 ```
-
-### Conectar Railway/Render/Vercel al repo
-Una vez el código esté en GitHub, en cada host eliges "Import from GitHub" y
-seleccionas `JCBarboG/SCARE`:
-- **Backend (Railway/Render):** build method "Dockerfile" (root del repo).
-- **Frontend (Vercel):** framework "Vite", el `vercel.json` ya está en la raíz.
 
 ## Limitaciones conocidas
 

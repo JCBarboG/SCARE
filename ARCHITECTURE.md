@@ -3,10 +3,10 @@
 ## Visión general
 
 ```
-Frontend (React + Vite, PWA)
+Frontend (React + Vite, PWA) — desplegado en GitHub Pages
   │  POST /api/search-reviewers { title, authors, yearFrom, yearTo }
   ▼
-Backend (Express local / función serverless en Vercel)
+Backend (Express, contenedor Docker) — desplegado en Railway/Render/Fly.io
   │
   ├─ api/lib/apis.js         → CrossRef + Semantic Scholar (paralelo)
   ├─ api/lib/searchCore.js   → filtrado por año, exclusión de autores, orquestación

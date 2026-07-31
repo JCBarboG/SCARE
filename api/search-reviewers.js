@@ -1,7 +1,7 @@
 import { runReviewerSearch } from './lib/searchCore.js';
 
 /**
- * Handler compatible con funciones serverless de Vercel.
+ * Handler HTTP montado por api/server.js (Express).
  * POST /api/search-reviewers
  * Body: { title, authors: string[], yearFrom, yearTo }
  */

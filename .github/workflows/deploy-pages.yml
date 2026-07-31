@@ -22,15 +22,15 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
 
       - run: npm install
       - run: npm run build
         env:
-          # URL pública del backend (Railway/Render). Configúrala en:
-          # Settings → Secrets and variables → Actions → Variables → VITE_API_URL
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          # URL pública del backend en Railway. Si el servicio cambia de URL,
+          # actualiza este valor y vuelve a hacer push.
+          VITE_API_URL: https://scare-production.up.railway.app
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

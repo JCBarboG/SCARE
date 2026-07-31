@@ -9,11 +9,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 );
 
-// Registro del service worker (PWA)
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.warn('No se pudo registrar el service worker:', err);
-    });
-  });
-}
+// El registro del service worker lo maneja automáticamente vite-plugin-pwa
+// (registerType: 'autoUpdate' en vite.config.js). No se registra manualmente
+// aquí para evitar una segunda ruta hardcodeada que no respeta el `base`
+// de despliegue (GitHub Pages sirve el sitio bajo /SCARE/, no en la raíz).
